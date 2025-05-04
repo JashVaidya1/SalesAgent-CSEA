@@ -7,7 +7,7 @@ import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import IconButton from "@mui/material/IconButton";
 
-const BASE_URL = "https://few-jokes-eat.loca.lt";
+const BASE_URL = "http://localhost:5001/api/v1"; 
 
 
 // -------------------- Main Hook for Table Rows --------------------
@@ -16,11 +16,11 @@ function useCustomerData(onChatClick) {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/callData`, {
+      .get(`${BASE_URL}/calls/getallcalls`, {
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials: false, // Only needed if cookies/sessions are involved
+        withCredentials: false, 
       })
       .then((response) => {
         const customerData = Array.isArray(response.data) ? response.data : [response.data];

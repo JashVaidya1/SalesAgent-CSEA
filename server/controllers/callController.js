@@ -11,7 +11,6 @@ export const createNewCall = async (req, res) => {
       product_name,
       userid,
       last_call_summary,
-      laptop_data
     } = req.body;
 
     const newCall = await Call.create({
@@ -22,7 +21,6 @@ export const createNewCall = async (req, res) => {
       product_name,
       userid,
       last_call_summary,
-      laptop_data
     });
 
     res.status(201).json(newCall);
@@ -46,6 +44,53 @@ export const getCallById = async (req, res) => {
     }
 
     res.status(200).json(call);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// GET ALL CALLS
+export const getAllCalls = async (req, res) => {
+  try {
+    const calls = await Call.find().sort({ createdAt: -1 }); // optional: latest first
+    res.status(200).json(calls);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// APPEND MULTIPLE CHATS TO A CALL
+export const appendChatsToCall = async (req, res) => {
+  try {
+    const { callid } = req.query;
+    const { chats } = req.body;
+
+    if (!callid) {
+      return res.status(400).json({ error: 'callid is required in query' });
+    }
+
+    if (!Array.isArray(chats) || chats.length === 0) {
+      return res.status(400).json({ error: 'chats must be a non-empty array' });
+    }
+
+    for (const chat of chats) {
+      if (!chat.role || !chat.content) {
+        return res.status(400).json({ error: 'Each chat must have role and content' });
+      }
+    }
+
+    const updatedCall = await Call.findOneAndUpdate(
+      { callid },
+      { $push: { chats: { $each: chats } } },
+      { new: true }
+    );
+
+    if (!updatedCall) {
+      return res.status(404).json({ error: 'Call not found' });
+    }
+
+    res.status(200).json(updatedCall);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

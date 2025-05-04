@@ -92,14 +92,30 @@ function useCustomerData() {
           last_call_summary: customer.last_call_summary,
           laptop_data: laptop_data, 
         };
+
+        const callData1 = {
+          callid: callId,
+          contactno: customer.contactno,
+          datetime: currentDateTime,
+          name: customer.name,
+          product_name: "laptop",
+          userid: customer._id,
+          last_call_summary: customer.last_call_summary,
+        };
     
         setCallStatus("📞 Call initiated...");
-    
-        const response = await axios.post(`${BASE_URL}/create-new-call`, callData, {
+
+        const response = await axios.post(`${BASE_URL}/calls/create-new-call`, callData1, {
           headers: {
             "Content-Type": "application/json",
           },
         });
+    
+        // const response = await axios.post(`${BASE_URL}/create-new-call`, callData, {
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        // });
     
         console.log("✅ Call created:", response.data);
         setCallStatus("✅ Call in progress...");

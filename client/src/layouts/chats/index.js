@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-// MUI Components
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -9,9 +8,8 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
-const BASE_URL = "https://few-jokes-eat.loca.lt";
+const BASE_URL = "http://localhost:5001/api/v1"; 
 
-// Custom Components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -33,10 +31,8 @@ function Tables() {
     id: null
   });
 
-  // Handle opening chat when icon is clicked - use useCallback to prevent recreating this function on every render
   const handleOpenChat = useCallback((id) => {
     console.log("hello button clicked!!", id);
-    // Set the call ID and open the modal
     setCallId(id);
     setOpen(true);
     
@@ -44,34 +40,29 @@ function Tables() {
     setLoading(true);
     setError(null);
     
-    // Fetch chat data for this call ID
     fetchChatData(id);
-  }, []); // Empty dependency array since this function doesn't depend on any props or state
-
-  // Separate fetchChatData function for real API calls
+  }, []);
   const fetchChatData = async (id) => {
     try {
-      const response = await axios.get(`${BASE_URL}/callData`);
-      console.log("all chat data is: ", response);
-      // Find the specific call data based on callid
+      const response = await axios.get(`${BASE_URL}/calls/getallcalls`);
+      console.log("all calls data is: ", response);
       const callData = response.data.find(call => call.callid === id);
       console.log("call data is: ", callData);
       if (callData) {
-        // Extract chat messages from the call data
         const formattedMessages = callData.chats.map((chat, index) => ({
-          id: index, // Using index as ID since the API doesn't provide message IDs
-          sender: chat.role, // 'user' or 'assistant'
+          id: index, 
+          sender: chat.role, 
           message: chat.content,
           timestamp: new Date(callData.datetime).toLocaleTimeString() 
         }));
         
+
         setChatMessages(formattedMessages);
         setCustomerInfo({
           name: callData.name || "Customer",
           id: callData.userid || null
         });
       } else {
-        // If no matching call data found
         setChatMessages([]);
         setError("No chat data found for this call.");
       }

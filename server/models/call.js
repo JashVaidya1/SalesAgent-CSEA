@@ -34,10 +34,20 @@ const callSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-  laptop_data: {
-    type: [mongoose.Schema.Types.Mixed], // Array of JSON objects
-    default: [],
-  },
+  chats: {
+    type: [{
+      _id: false,
+      role: {
+        type: String,
+        required: true
+      },
+      content: {
+        type: String,
+        required: true
+      }
+    }],
+    default: [] 
+  }
 }, {
   timestamps: true,
 });
