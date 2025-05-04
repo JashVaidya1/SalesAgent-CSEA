@@ -320,7 +320,7 @@ def start_call():
         print(f"DEBUG Payload: {payload}", flush=True)  # Optional: log full payload
 
         requests.post(
-            f"http://localhost:5001/api/v1/calls/append-chats?callid={unique_id}",
+            f"https://pitchnova.onrender.com/api/v1/calls/append-chats?callid={unique_id}",
             json=payload,
             timeout=2
         )
@@ -418,7 +418,7 @@ def gather_input_inbound():
         print(f"DEBUG Payload: {payload}", flush=True)  # Optional: log full payload
 
         requests.post(
-            f"http://localhost:5001/api/v1/calls/append-chats?callid={unique_id}",
+            f"https://pitchnova.onrender.com/api/v1/calls/append-chats?callid={unique_id}",
             json=payload,
             timeout=2
         )
@@ -497,7 +497,7 @@ def process_speech():
         print(f"DEBUG Payload: {payload}", flush=True)  # Optional: log full payload
 
         requests.post(
-            f"http://localhost:5001/api/v1/calls/append-chats?callid={call_sid}",
+            f"https://pitchnova.onrender.com/api/v1/calls/append-chats?callid={call_sid}",
             json=payload,
             timeout=2
         )
@@ -540,7 +540,7 @@ def event():
                     try:
                         print(f"DEBUG: Posting summary to endpoint for call {unique_id}", flush=True)
                         post_resp = requests.post(
-                            f"http://localhost:5001/api/v1/calls/create-new-summary",
+                            f"https://pitchnova.onrender.com/api/v1/calls/create-new-summary",
                             json=summary_result,
                             timeout=10
                         )
@@ -557,7 +557,7 @@ def event():
                     #     print(f"DEBUG: Posting summary to /create-new-summary endpoint for call {unique_id}", flush=True)
 
                     #     post_resp = requests.post(
-                    #         "http://localhost:5001/api/v1/calls/create-new-summary",
+                    #         "https://pitchnova.onrender.com/api/v1/calls/create-new-summary",
                     #         json=summary_result,
                     #         timeout=10
                     #     )
@@ -577,7 +577,7 @@ def event():
                     #     print(f"DEBUG: Posting initial inbound summary to /summary endpoint", flush=True)
 
                     #     requests.post(
-                    #         f"http://localhost:5001/api/v1/calls/create-new-summary",
+                    #         f"https://pitchnova.onrender.com/api/v1/calls/create-new-summary",
                     #         json=summary_result,
                     #         timeout=2
                     #     )

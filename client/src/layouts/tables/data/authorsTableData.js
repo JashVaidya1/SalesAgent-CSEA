@@ -9,7 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
-const BASE_URL = "http://localhost:5001/api/v1"; 
+const BASE_URL = "https://pitchnova.onrender.com/api/v1"; 
 
 // -------------------- Author Component --------------------
 function Author({ name, email }) {

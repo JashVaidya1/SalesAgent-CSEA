@@ -7,7 +7,7 @@ import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import IconButton from "@mui/material/IconButton";
 
-const BASE_URL = "http://localhost:5001/api/v1"; 
+const BASE_URL = "https://pitchnova.onrender.com/api/v1"; 
 
 
 // -------------------- Main Hook for Table Rows --------------------

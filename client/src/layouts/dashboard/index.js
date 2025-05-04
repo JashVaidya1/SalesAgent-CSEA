@@ -56,7 +56,7 @@ function Dashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/api/v1/calls/getallcalls", {
+      .get("https://pitchnova.onrender.com/api/v1/calls/getallcalls", {
         headers: {
           "Content-Type": "application/json",
         },

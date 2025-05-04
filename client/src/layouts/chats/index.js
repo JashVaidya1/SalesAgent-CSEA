@@ -16,7 +16,7 @@ import Table from "examples/Tables/Table";
 
 // Data
 import CustomerTableData from "layouts/chats/data/authorsTableData.js";
-const BASE_URL = "http://localhost:5001/api/v1"; 
+const BASE_URL = "https://pitchnova.onrender.com/api/v1"; 
 
 function Tables() {
   // State for chat modal
