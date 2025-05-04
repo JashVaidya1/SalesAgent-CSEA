@@ -3,6 +3,7 @@ import Call from '../models/call.js';
 // CREATE NEW CALL
 export const createNewCall = async (req, res) => {
   try {
+    console.log("🔧 createNewCall initiated in backend");
     const {
       callid,
       contactno,
@@ -21,6 +22,7 @@ export const createNewCall = async (req, res) => {
       product_name,
       userid,
       last_call_summary,
+      summary: {}
     });
 
     res.status(201).json(newCall);
@@ -108,5 +110,83 @@ export const appendChatsToCall = async (req, res) => {
   } catch (error) {
     console.error("💥 Error in appendChatsToCall:", error.message);
     res.status(500).json({ error: error.message });
+  }
+};
+
+
+export const createNewSummary = async (req, res) => {
+  try {
+    console.log('Received request to create new summary');
+    console.log('Request body:', req.body);
+
+    const {
+      callid,
+      contactno,
+      datetime,
+      discount,
+      name,
+      product_name,
+      sentiment_score,
+      shortDescription,
+      sold,
+      soldPrice,
+      userid
+    } = req.body;
+
+    if (!callid) {
+      console.warn('Missing callid in request');
+      return res.status(400).json({ message: 'Missing callid in request' });
+    }
+
+    const call = await Call.findOne({ callid });
+
+    if (!call) {
+      console.warn(`Call with callid ${callid} not found`);
+      return res.status(404).json({ message: 'Call not found' });
+    }
+
+    console.log(`Found call record for callid ${callid}, updating summary...`);
+
+    call.summary = {
+      callid,
+      contactno,
+      datetime,
+      discount,
+      name,
+      product_name,
+      sentiment_score,
+      shortDescription,
+      sold,
+      soldPrice,
+      userid
+    };
+
+    await call.save();
+    console.log(`Summary updated and saved for callid ${callid}`);
+
+    res.status(200).json({
+      message: 'Summary updated successfully',
+      summary: call.summary
+    });
+  } catch (error) {
+    console.error('Error creating summary:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+
+export const deleteAllCalls = async (req, res) => {
+  try {
+    await Call.deleteMany();
+
+    res.status(200).json({
+      message: 'All calls have been deleted successfully.'
+    });
+  } catch (error) {
+    console.error('Error deleting all calls:', error);
+    res.status(500).json({
+      message: 'Failed to delete all calls.',
+      error: error.message
+    });
   }
 };

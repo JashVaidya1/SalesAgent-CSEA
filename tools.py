@@ -77,7 +77,7 @@ tools_info = {
 
 def summariser(message_history, call_sid):
     print('Summarising the call...')
-    gclient3 = Groq(api_key='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')
+    gclient3 = Groq(api_key='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')
     
     # Properly format the messages parameter as an array of message objects
     messages = [

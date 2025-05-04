@@ -5,17 +5,12 @@ import { getAllSummaries, createNewSummary, getSummaryByCallId, deleteAllSummari
 
 const router = express.Router();
 
-// Route to get all summaries
 router.get('/getallsummary', getAllSummaries);
 
-// Route to create a new summary
 router.post('/create-new-summary', createNewSummary);
 
-// Route to get a summary by call ID
 router.get('/getsummarybycallid', getSummaryByCallId);
 
-// Route to delete all summaries
 router.delete('/delete-all', deleteAllSummaries);
-
 
 export default router;

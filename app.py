@@ -93,7 +93,7 @@ def save_summary(unique_id, summary_data):
         print(f"DEBUG: Successfully saved summary to {path}", flush=True)
     except Exception as e:
         print(f"DEBUG ERROR: Failed to save summary: {str(e)}", flush=True)
-    logger.info(f"Summary saved to file for call {unique_id}")
+    # logger.info(f"Summary saved to file for call {unique_id}")
 
 
 def load_summary(unique_id):
@@ -127,7 +127,7 @@ def summariser(message_history, call_sid):
     print(f"DEBUG: Starting summarization for call {call_sid}", flush=True)
     
     try:
-        gclient = Groq(api_key="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")
+        gclient = Groq(api_key="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")
         
         # Format the conversation history as a string
         conversation_text = ""
@@ -180,7 +180,7 @@ def summariser(message_history, call_sid):
         SUMMARIES[call_sid] = summary_json
         
         print(f"DEBUG: Summary generation complete for call {call_sid}", flush=True)
-        logger.info(f"Summary generated for call {call_sid}")
+        # logger.info(f"Summary generated for call {call_sid}")
         return summary_json
         
     except json.JSONDecodeError as e:
@@ -192,7 +192,7 @@ def summariser(message_history, call_sid):
         print(f"DEBUG ERROR: Exception type: {type(e)}", flush=True)
         import traceback
         print(f"DEBUG ERROR: Traceback: {traceback.format_exc()}", flush=True)
-        logger.error(f"Error processing summary: {str(e)}")
+        # logger.error(f"Error processing summary: {str(e)}")
         return {"error": "Processing error", "details": str(e)}
 
 
@@ -207,9 +207,10 @@ def delayed_delete(filename, delay=5):
         time.sleep(delay)
         try:
             os.remove(filename)
-            logger.info(f"Deleted temporary audio file: {filename}")
+            # logger.info(f"Deleted temporary audio file: {filename}")
         except Exception as error:
-            logger.error(f"Error deleting audio file {filename}: {error}")
+            print(f"DEBUG ERROR: Error deleting audio file {filename}: {error}", flush=True)
+            # logger.error(f"Error deleting audio file {filename}: {error}")
 
     thread = threading.Thread(target=attempt_delete)
     thread.start()
@@ -236,7 +237,7 @@ def serve_audio(filename):
         return send_from_directory(directory, filename)
     except FileNotFoundError:
         print(f"DEBUG ERROR: Audio file not found: {filename}", flush=True)
-        logger.error(f"Audio file not found: {filename}")
+        # logger.error(f"Audio file not found: {filename}")
         abort(404)
 
 temp_key = 1
@@ -304,7 +305,7 @@ def start_call():
         )
     except Exception as e:
         print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
-        logger.warning(f"Failed to send to /conversation: {e}")
+        # logger.warning(f"Failed to send to /conversation: {e}")
 
 
 
@@ -325,7 +326,7 @@ def start_call():
         )
     except Exception as e:
         print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
-        logger.warning(f"Failed to send to /conversation: {e}")
+        # logger.warning(f"Failed to send to /conversation: {e}")
 
 
     
@@ -402,7 +403,7 @@ def gather_input_inbound():
         )
     except Exception as e:
         print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
-        logger.warning(f"Failed to send to /conversation: {e}")
+        # logger.warning(f"Failed to send to /conversation: {e}")
 
 
 
@@ -423,7 +424,7 @@ def gather_input_inbound():
         )
     except Exception as e:
         print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
-        logger.warning(f"Failed to send to /conversation: {e}")
+        # logger.warning(f"Failed to send to /conversation: {e}")
 
 
 
@@ -482,7 +483,7 @@ def process_speech():
         )
     except Exception as e:
         print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
-        logger.warning(f"Failed to send to /conversation: {e}")
+        # logger.warning(f"Failed to send to /conversation: {e}")
 
 
     try:
@@ -502,7 +503,7 @@ def process_speech():
         )
     except Exception as e:
         print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
-        logger.warning(f"Failed to send to /conversation: {e}")
+        # logger.warning(f"Failed to send to /conversation: {e}")
 
 
 
@@ -539,12 +540,8 @@ def event():
                     try:
                         print(f"DEBUG: Posting summary to endpoint for call {unique_id}", flush=True)
                         post_resp = requests.post(
-                            f"http://localhost:5000/summary/{unique_id}",
-                            json={
-                                "unique_id": unique_id,
-                                "messages": summary_result,
-                                "status": call_status
-                            },
+                            f"http://localhost:5001/api/v1/calls/create-new-summary",
+                            json=summary_result,
                             timeout=10
                         )
                         
@@ -555,6 +552,41 @@ def event():
                             print(f"DEBUG ERROR: Failed to post summary: {post_resp.status_code} - {post_resp.text}", flush=True)
                     except requests.exceptions.RequestException as e:
                         print(f"DEBUG ERROR: Request error posting summary: {str(e)}", flush=True)
+
+                    # try:
+                    #     print(f"DEBUG: Posting summary to /create-new-summary endpoint for call {unique_id}", flush=True)
+
+                    #     post_resp = requests.post(
+                    #         "http://localhost:5001/api/v1/calls/create-new-summary",
+                    #         json=summary_result,
+                    #         timeout=10
+                    #     )
+
+                    #     print(f"DEBUG: Summary post response status: {post_resp.status_code}", flush=True)
+                    #     if post_resp.status_code == 200:
+                    #         print(f"DEBUG: Summary successfully posted to /create-new-summary endpoint", flush=True)
+                    #     else:
+                    #         print(f"DEBUG ERROR: Failed to post summary: {post_resp.status_code} - {post_resp.text}", flush=True)
+
+                    # except requests.exceptions.RequestException as e:
+                    #     print(f"DEBUG ERROR: Request error posting summary: {str(e)}", flush=True)
+
+
+
+                    # try:
+                    #     print(f"DEBUG: Posting initial inbound summary to /summary endpoint", flush=True)
+
+                    #     requests.post(
+                    #         f"http://localhost:5001/api/v1/calls/create-new-summary",
+                    #         json=summary_result,
+                    #         timeout=2
+                    #     )
+                    # except Exception as e:
+                    #     print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
+                    #     logger.warning(f"Failed to send to /conversation: {e}")
+
+
+
                 except Exception as e:
                     print(f"DEBUG ERROR: Error generating summary for call {call_sid}: {str(e)}", flush=True)
                     print(f"DEBUG ERROR: Exception type: {type(e)}", flush=True)
@@ -616,7 +648,7 @@ def receive_summary(unique_id):
     save_summary(unique_id, messages)
     
     print(f"DEBUG: Summary for call {unique_id} stored successfully", flush=True)
-    logger.info(f"Summary for call {unique_id} received and stored")
+    # logger.info(f"Summary for call {unique_id} received and stored")
     
     return jsonify({"status": "success"}), 200
 
@@ -629,7 +661,7 @@ def get_summary(unique_id):
     # First check in-memory store
     if unique_id in SUMMARIES:
         print(f"DEBUG: Retrieved summary from memory for call {unique_id}", flush=True)
-        logger.info(f"Retrieved summary from memory for call {unique_id}")
+        # logger.info(f"Retrieved summary from memory for call {unique_id}")
         return jsonify(SUMMARIES.get(unique_id))
     
     # Then check file store
@@ -638,11 +670,11 @@ def get_summary(unique_id):
         # Add to in-memory store for faster access next time
         SUMMARIES[unique_id] = summary
         print(f"DEBUG: Retrieved summary from file for call {unique_id}", flush=True)
-        logger.info(f"Retrieved summary from file for call {unique_id}")
+        # logger.info(f"Retrieved summary from file for call {unique_id}")
         return jsonify(summary)
     
     print(f"DEBUG WARNING: Summary not found for call {unique_id}", flush=True)
-    logger.warning(f"Summary not found for call {unique_id}")
+    # logger.warning(f"Summary not found for call {unique_id}")
     return jsonify({"error": "Summary not found"}), 404
 
 
@@ -663,7 +695,7 @@ def post_summary(unique_id):
     save_summary(unique_id, data)
     
     print(f"DEBUG: Summary for call {unique_id} posted and stored successfully", flush=True)
-    logger.info(f"Summary for call {unique_id} posted and stored")
+    # logger.info(f"Summary for call {unique_id} posted and stored")
     
     return jsonify({"status": "success", "message": f"Summary for call {unique_id} stored successfully"}), 200
 

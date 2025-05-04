@@ -17,76 +17,76 @@ const BASE_URL = "http://localhost:5001/api/v1";
 function useCustomerData() {
   const [rows, setRows] = useState([]);
 
+  // useEffect(() => {
+  //   const dummyData = [
+  //     {
+  //       name: "Bob Smith",
+  //       email: "bob@example.com",
+  //       product_name: "Wireless Headphones",
+  //       contactno: "1234567890",
+  //       sentiment_score: 0.75,
+  //       sold: "No",
+  //       discount: 5,
+  //       soldPrice: 25000,
+  //       shortDescription: "Interested in offers for noise-canceling headphones.",
+  //       datetime : "2023-23-23 12:12:12"
+  //     },
+  //   ];
+
+  //   const mappedRows = dummyData.map((customer, index) => ({
+  //     id: index + 1,
+  //     name: (
+  //       <VuiTypography variant="caption" color="white" fontWeight="medium">
+  //         {customer.name}
+  //       </VuiTypography>
+  //     ),
+  //     contactno: (
+  //       <VuiTypography variant="caption" color="white" fontWeight="medium">
+  //         {customer.contactno}
+  //       </VuiTypography>
+  //     ),
+  //     product: (
+  //       <VuiTypography variant="caption" color="white" fontWeight="medium">
+  //         {customer.product_name}
+  //       </VuiTypography>
+  //     ),
+  //     dateTime: (
+  //       <VuiTypography variant="caption" color="white" fontWeight="medium">
+  //         {customer.datetime}
+  //       </VuiTypography>
+  //     ),
+  //     sentiment: (
+  //       <VuiTypography variant="caption" color="white" fontWeight="medium">
+  //         {customer.sentiment_score}
+  //       </VuiTypography>
+  //     ),
+  //     sold: (
+  //       <VuiTypography variant="caption" color="white" fontWeight="medium">
+  //         {customer.sold}
+  //       </VuiTypography>
+  //     ),
+  //     discount: (
+  //       <VuiTypography variant="caption" color="white" fontWeight="medium">
+  //         {customer.discount}%
+  //       </VuiTypography>
+  //     ),
+  //     soldPrice: (
+  //       <VuiTypography variant="caption" color="white" fontWeight="medium">
+  //         ₹{customer.soldPrice}
+  //       </VuiTypography>
+  //     ),
+  //     shortDescription: (
+  //       <VuiTypography variant="caption" color="white" fontWeight="medium">
+  //         {customer.shortDescription}
+  //       </VuiTypography>
+  //     ),
+  //   }));
+
+  //   setRows(mappedRows);
+  // }, []);
+
   useEffect(() => {
-    const dummyData = [
-      {
-        name: "Bob Smith",
-        email: "bob@example.com",
-        product_name: "Wireless Headphones",
-        contactno: "1234567890",
-        sentiment_score: 0.75,
-        sold: "No",
-        discount: 5,
-        soldPrice: 25000,
-        shortDescription: "Interested in offers for noise-canceling headphones.",
-        datetime : "2023-23-23 12:12:12"
-      },
-    ];
-
-    const mappedRows = dummyData.map((customer, index) => ({
-      id: index + 1,
-      name: (
-        <VuiTypography variant="caption" color="white" fontWeight="medium">
-          {customer.name}
-        </VuiTypography>
-      ),
-      contactno: (
-        <VuiTypography variant="caption" color="white" fontWeight="medium">
-          {customer.contactno}
-        </VuiTypography>
-      ),
-      product: (
-        <VuiTypography variant="caption" color="white" fontWeight="medium">
-          {customer.product_name}
-        </VuiTypography>
-      ),
-      dateTime: (
-        <VuiTypography variant="caption" color="white" fontWeight="medium">
-          {customer.datetime}
-        </VuiTypography>
-      ),
-      sentiment: (
-        <VuiTypography variant="caption" color="white" fontWeight="medium">
-          {customer.sentiment_score}
-        </VuiTypography>
-      ),
-      sold: (
-        <VuiTypography variant="caption" color="white" fontWeight="medium">
-          {customer.sold}
-        </VuiTypography>
-      ),
-      discount: (
-        <VuiTypography variant="caption" color="white" fontWeight="medium">
-          {customer.discount}%
-        </VuiTypography>
-      ),
-      soldPrice: (
-        <VuiTypography variant="caption" color="white" fontWeight="medium">
-          ₹{customer.soldPrice}
-        </VuiTypography>
-      ),
-      shortDescription: (
-        <VuiTypography variant="caption" color="white" fontWeight="medium">
-          {customer.shortDescription}
-        </VuiTypography>
-      ),
-    }));
-
-    setRows(mappedRows);
-  }, []);
-
-  useEffect(() => {
-     axios.get(`${BASE_URL}/summary/getallsummary`, {
+     axios.get(`${BASE_URL}/calls/getallcalls`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -94,6 +94,7 @@ function useCustomerData() {
     })
       .then((response) => {
         const customerData = response.data;
+        console.log("Fetched data:", customerData);
   
         const mappedRows = customerData.map((customer, index) => ({
           id: index + 1,
@@ -114,32 +115,32 @@ function useCustomerData() {
           ),
           dateTime: (
             <VuiTypography variant="caption" color="white" fontWeight="medium">
-              {customer.datetime}
+              {customer.summary.datetime}
             </VuiTypography>
           ),
           sentiment: (
             <VuiTypography variant="caption" color="white" fontWeight="medium">
-              {customer.sentiment_score}
+              {customer.summary.sentiment_score}
             </VuiTypography>
           ),
           sold: (
             <VuiTypography variant="caption" color="white" fontWeight="medium">
-              {customer.sold}
+              {customer.summary.sold}
             </VuiTypography>
           ),
           discount: (
             <VuiTypography variant="caption" color="white" fontWeight="medium">
-              {customer.discount}%
+              {customer.summary.discount}%
             </VuiTypography>
           ),
           soldPrice: (
             <VuiTypography variant="caption" color="white" fontWeight="medium">
-              ₹{customer.soldPrice}
+              ₹{customer.summary.soldPrice}
             </VuiTypography>
           ),
           shortDescription: (
             <VuiTypography variant="caption" color="white" fontWeight="medium">
-              {customer.shortDescription}
+              {customer.summary.shortDescription}
             </VuiTypography>
           ),
         }));
