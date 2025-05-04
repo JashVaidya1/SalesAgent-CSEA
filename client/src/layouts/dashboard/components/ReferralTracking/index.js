@@ -19,7 +19,7 @@ function ReferralTracking() {
 	// Fetch the data from the API
 	useEffect(() => {
 		axios
-			.get('https://giant-ducks-report.loca.lt/summaryData', {
+			.get('http://localhost:5001/api/v1/calls/getallcalls', {
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -33,7 +33,7 @@ function ReferralTracking() {
 
 				// Loop through customerData and calculate sold items
 				customerData.forEach((customer) => {
-					if (customer.sold === 1) {
+					if (customer.summary.sold === 1) {
 						soldItems += 1;
 					}
 				});
