@@ -66,32 +66,47 @@ export const appendChatsToCall = async (req, res) => {
     const { callid } = req.query;
     const { chats } = req.body;
 
+    console.log("🔧 appendChatsToCall initiated");
+    console.log("➡️ callid:", callid);
+    console.log("📥 chats:", JSON.stringify(chats, null, 2));
+
     if (!callid) {
+      console.error("❌ callid missing");
       return res.status(400).json({ error: 'callid is required in query' });
     }
 
     if (!Array.isArray(chats) || chats.length === 0) {
+      console.error("❌ chats must be a non-empty array");
       return res.status(400).json({ error: 'chats must be a non-empty array' });
     }
 
-    for (const chat of chats) {
+    for (const [index, chat] of chats.entries()) {
       if (!chat.role || !chat.content) {
+        console.error(`❌ Chat at index ${index} missing role/content:`, chat);
         return res.status(400).json({ error: 'Each chat must have role and content' });
       }
     }
 
+    // Step 1: Find the call
+    const existingCall = await Call.findOne({ callid });
+
+    if (!existingCall) {
+      console.warn("⚠️ No call found with callid:", callid);
+      return res.status(404).json({ error: 'Call not found' });
+    }
+
+    // Step 2: Update chats array
     const updatedCall = await Call.findOneAndUpdate(
       { callid },
       { $push: { chats: { $each: chats } } },
       { new: true }
     );
 
-    if (!updatedCall) {
-      return res.status(404).json({ error: 'Call not found' });
-    }
-
+    console.log("✅ Chats appended to call:", callid);
     res.status(200).json(updatedCall);
+
   } catch (error) {
+    console.error("💥 Error in appendChatsToCall:", error.message);
     res.status(500).json({ error: error.message });
   }
 };

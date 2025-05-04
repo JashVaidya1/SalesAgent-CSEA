@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, url_for, after_this_request, send_from_directory, abort
+from flask_cors import CORS
 from twilio.twiml.voice_response import VoiceResponse, Gather
 from twilio.rest import Client
 from werkzeug.utils import secure_filename
@@ -13,44 +14,45 @@ import threading
 import time
 import requests
 import sys
-
-# Configure logging with detailed format and output to stdout for better debugging
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
-logger = logging.getLogger(__name__)
-
-# Force unbuffered output for debugging
-os.environ['PYTHONUNBUFFERED'] = '1'
+import os
+import json
+import uuid
+import logging
+import threading
+import time
+import requests
+import sys
 
 from audio_helpers import text_to_speech, save_audio_file
 # from conversation import post_conversation_update
 from ai_helpers import process_initial_message, process_message, initiate_inbound_message
+
+# Configuration
 from config import Config
 
-# Directory for temporary audio files
+# Initialize Flask app once and enable CORS for your frontend origin
+app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+app.config.from_object(Config)
+app.logger.setLevel(logging.DEBUG)
+
+# Force unbuffered output for debugging
+os.environ['PYTHONUNBUFFERED'] = '1'
+
+# Directories for storage
 AUDIO_DIR = 'audio_files'
-if not os.path.exists(AUDIO_DIR):
-    os.makedirs(AUDIO_DIR)
-    print(f"DEBUG: Created audio directory: {AUDIO_DIR}", flush=True)
-
-# Directory-based storage for conversation histories
 DATA_DIR = 'conversations'
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
-    print(f"DEBUG: Created conversations directory: {DATA_DIR}", flush=True)
-
-# Directory for storing summaries
 SUMMARY_DIR = 'summaries'
-if not os.path.exists(SUMMARY_DIR):
-    os.makedirs(SUMMARY_DIR)
-    print(f"DEBUG: Created summaries directory: {SUMMARY_DIR}", flush=True)
+for d in (AUDIO_DIR, DATA_DIR, SUMMARY_DIR):
+    os.makedirs(d, exist_ok=True)
+    print(f"DEBUG: Ensured directory exists: {d}", flush=True)
 
 # In-memory stores
-CONVERSATIONS = {}  # { unique_id: [messages] }
-SUMMARIES = {}      # { call_sid: summary_dict }
+CONVERSATIONS = {}
+SUMMARIES = {}
+
+
+
 
 def save_conversation(unique_id, message_history):
     """Save conversation history to a JSON file"""
@@ -213,11 +215,6 @@ def delayed_delete(filename, delay=5):
     thread.start()
 
 
-# Initialize Flask app and Twilio client
-app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config.from_object(Config)
-app.logger.setLevel(logging.DEBUG)
 
 client = Client(Config.TWILIO_ACCOUNT_SID, Config.TWILIO_AUTH_TOKEN)
 
@@ -308,6 +305,29 @@ def start_call():
     except Exception as e:
         print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
         logger.warning(f"Failed to send to /conversation: {e}")
+
+
+
+    try:
+        print(f"DEBUG: Posting initial inbound conversation to /conversation endpoint", flush=True)
+
+        # Wrap messages in a "chats" key
+        payload = {
+            "chats": history[1:]  # ← your array of message objects goes here
+        }
+
+        print(f"DEBUG Payload: {payload}", flush=True)  # Optional: log full payload
+
+        requests.post(
+            f"http://localhost:5001/api/v1/calls/append-chats?callid={unique_id}",
+            json=payload,
+            timeout=2
+        )
+    except Exception as e:
+        print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
+        logger.warning(f"Failed to send to /conversation: {e}")
+
+
     
     # Build TwiML response
     print("DEBUG: Building TwiML response", flush=True)
@@ -384,6 +404,29 @@ def gather_input_inbound():
         print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
         logger.warning(f"Failed to send to /conversation: {e}")
 
+
+
+    try:
+        print(f"DEBUG: Posting initial inbound conversation to /conversation endpoint", flush=True)
+
+        # Wrap messages in a "chats" key
+        payload = {
+            "chats": history[1:]  # ← your array of message objects goes here
+        }
+
+        print(f"DEBUG Payload: {payload}", flush=True)  # Optional: log full payload
+
+        requests.post(
+            f"http://localhost:5001/api/v1/calls/append-chats?callid={unique_id}",
+            json=payload,
+            timeout=2
+        )
+    except Exception as e:
+        print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
+        logger.warning(f"Failed to send to /conversation: {e}")
+
+
+
     resp.redirect(url_for('gather_input', CallSid=unique_id))
     return str(resp)
 
@@ -440,6 +483,28 @@ def process_speech():
     except Exception as e:
         print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
         logger.warning(f"Failed to send to /conversation: {e}")
+
+
+    try:
+        print(f"DEBUG: Posting initial inbound conversation to /conversation endpoint", flush=True)
+
+        # Wrap messages in a "chats" key
+        payload = {
+            "chats": history[-2:]  # ← your array of message objects goes here
+        }
+
+        print(f"DEBUG Payload: {payload}", flush=True)  # Optional: log full payload
+
+        requests.post(
+            f"http://localhost:5001/api/v1/calls/append-chats?callid={call_sid}",
+            json=payload,
+            timeout=2
+        )
+    except Exception as e:
+        print(f"DEBUG ERROR: Failed to send to /conversation: {str(e)}", flush=True)
+        logger.warning(f"Failed to send to /conversation: {e}")
+
+
 
     return str(resp)
 
@@ -519,7 +584,7 @@ def receive_conversation(unique_id):
     CONVERSATIONS[unique_id].extend(messages)
     print(f"DEBUG: Updated in-memory conversation for {unique_id}, now has {len(CONVERSATIONS[unique_id])} messages", flush=True)
 
-    return '', 204
+    return '', 204 
 
 
 @app.route('/conversation/<unique_id>', methods=['GET'])

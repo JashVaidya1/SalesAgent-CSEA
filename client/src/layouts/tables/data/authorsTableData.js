@@ -105,20 +105,55 @@ function useCustomerData() {
     
         setCallStatus("📞 Call initiated...");
 
-        const response = await axios.post(`${BASE_URL}/calls/create-new-call`, callData1, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-    
-        // const response = await axios.post(`${BASE_URL}/create-new-call`, callData, {
+        // const response5 = await axios.post(`${BASE_URL}/calls/create-new-call`, callData1, {
         //   headers: {
         //     "Content-Type": "application/json",
         //   },
         // });
+
+        // console.log("new Call object initiated..", response5.data);
+
+        // const response = await axios.post(`https://3b50-14-139-196-234.ngrok-free.app/start-call`, callData, {
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        // });
+
+        // console.log("✅ Call created:", response.data);
+        // setCallStatus("✅ Call in progress...");
+
+        try {
+          const response5 = await axios.post(`${BASE_URL}/calls/create-new-call`, callData1, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+        
+          console.log("🟢 New Call object initiated:", response5.data);
+        
+          if (response5.status === 200 || response5.status === 201) {
+            const response = await axios.post(`https://3b50-14-139-196-234.ngrok-free.app/start-call`, callData, {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+        
+            console.log("✅ Call created:", response.data);
+            setCallStatus("✅ Call in progress...");
+          } else {
+            console.error("❌ Failed to create call object, skipping start-call");
+            setCallStatus("Error: Call object not created.");
+          }
+        
+        } catch (error) {
+          console.error("💥 Error during call creation/start:", error.message);
+          setCallStatus("Call failed, please try again.");
+          setTimeout(() => setCallStatus(null), 3000); // Hide error
+        }
+        
     
-        console.log("✅ Call created:", response.data);
-        setCallStatus("✅ Call in progress...");
+       
+        
     
       } catch (error) {
         console.error("Call creation failed:", error);
