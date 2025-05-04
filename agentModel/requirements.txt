@@ -26,3 +26,6 @@ websockets
 
 # Optional: if you're using Anthropic Claude models
 anthropic==0.21.0
+
+# Add gunicorn here
+gunicorn
