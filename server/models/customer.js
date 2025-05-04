@@ -6,18 +6,26 @@ const customerSchema = new mongoose.Schema({
     required: [true, 'Please provide customer name'],
   },
 
-  contactNo: {
+  email: {
     type: String,
-    required: [true, 'Please provide contact number'],
-    unique: true
+    required: [true, 'Please provide customer email'],
+    unique: true,
+    match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address'],
   },
 
-  existingCustomer: {
-    type: Boolean,
-    default: false
-  }
+  last_call_summary: {
+    type: String,
+    required: [true, 'Please provide last call summary'],
+  },
+
+  contactno: {
+    type: String,
+    required: [true, 'Please provide contact number'],
+    unique: true,
+  },
+
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 const Customer = mongoose.model('Customer', customerSchema);

@@ -11,7 +11,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-const BASE_URL = "https://few-jokes-eat.loca.lt";
+const BASE_URL = "http://localhost:5001/api/v1"; 
 
 // -------------------- Main Hook for Table Rows --------------------
 function useCustomerData() {
@@ -86,11 +86,11 @@ function useCustomerData() {
   }, []);
 
   useEffect(() => {
-     axios.get(`${BASE_URL}/summaryData`, {
+     axios.get(`${BASE_URL}/summary/getallsummary`, {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: false, // if not using cookies/session
+      withCredentials: false, 
     })
       .then((response) => {
         const customerData = response.data;

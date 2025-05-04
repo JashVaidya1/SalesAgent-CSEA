@@ -6,11 +6,14 @@ import connectToDb from "./config/db_config.js";
 import cookieParser from "cookie-parser";
 const app = express();
 import productRoutes from './routes/productRoutes.js';
+import customerRoutes from './routes/customerRoutes.js';
+import callRoutes from './routes/callRoutes.js';
+import laptopRoutes from './routes/laptopRoutes.js';
+import summaryRoutes from './routes/summaryRoutes.js';
 
 const corsOptions = {
     origin: (origin, callback) => {
         if (!origin) {
-            // Allow non-browser requests like Postman or server-to-server requests
             return callback(null, true);
         }
         return callback(null, origin); // Allow any origin dynamically
@@ -26,12 +29,17 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('/api/v1', (req, res) => {
   res.send('Server is running!');
 });
 
 
-app.use('/api/products', productRoutes);
+app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/customers', customerRoutes);
+app.use('/api/v1/calls', callRoutes);
+app.use('/api/v1/laptops', laptopRoutes);
+app.use('/api/v1/summary', summaryRoutes);
+
 
 const start = async () => {
     try {

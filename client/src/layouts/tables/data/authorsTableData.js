@@ -9,7 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
-const BASE_URL = "https://few-jokes-eat.loca.lt";
+const BASE_URL = "http://localhost:5001/api/v1"; 
 
 // -------------------- Author Component --------------------
 function Author({ name, email }) {
@@ -73,12 +73,12 @@ function useCustomerData() {
         const callId = uuidv4();
         const currentDateTime = new Date().toISOString();
 
-        const response1 = await axios.get("https://true-crabs-brush.loca.lt/laptopDeatils", {
+        const response1 = await axios.get(`${BASE_URL}/laptops/getalllaptops`, {
           headers: {
             "Content-Type": "application/json",
           },
           withCredentials: false,
-        });
+        }); 
     
         const laptop_data = response1.data; 
     
@@ -90,7 +90,7 @@ function useCustomerData() {
           product_name: "laptop",
           userid: customer._id,
           last_call_summary: customer.last_call_summary,
-          laptop_data: laptop_data, // attach fetched data
+          laptop_data: laptop_data, 
         };
     
         setCallStatus("📞 Call initiated...");
@@ -159,7 +159,7 @@ function useCustomerData() {
     setRows(dummyRows);
 
     // Fetch real customer data from API
-    axios.get(`${BASE_URL}/customerData`, {
+    axios.get(`${BASE_URL}/customers/getallcustomers`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -167,7 +167,7 @@ function useCustomerData() {
     })
     .then((response) => {
       const customerData = response.data;
-      console.log("Fetched data:", customerData);
+      console.log("Fetched data:", customerData); 
 
       setCustomersData(prev => [...prev, ...customerData]);
 
