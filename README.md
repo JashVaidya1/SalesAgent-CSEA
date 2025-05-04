@@ -2,13 +2,6 @@
 
 Welcome to the AI-Powered Cold Calling Sales Agent repository! This project implements an intelligent phone agent capable of conducting natural-sounding sales conversations, analyzing customer responses in real-time, and converting leads into sales opportunities.
 
----
-
-## 🎬 Live Demo
-
-📺 [Demo Video Link]() - Check out our AI Sales Agent in action!
-
----
 
 ## 📋 Overview
 
