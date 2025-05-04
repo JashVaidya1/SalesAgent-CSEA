@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -8,7 +7,6 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
-const BASE_URL = "http://localhost:5001/api/v1"; 
 
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
@@ -18,6 +16,7 @@ import Table from "examples/Tables/Table";
 
 // Data
 import CustomerTableData from "layouts/chats/data/authorsTableData.js";
+const BASE_URL = "http://localhost:5001/api/v1"; 
 
 function Tables() {
   // State for chat modal

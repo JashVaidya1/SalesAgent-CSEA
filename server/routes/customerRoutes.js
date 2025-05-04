@@ -4,7 +4,6 @@ import { createCustomer, getAllCustomers, deleteAllCustomers } from '../controll
 const router = express.Router();
 
 router.post('/new-customer', createCustomer);
-
 router.get('/getallcustomers', getAllCustomers);
 router.delete('/deleteallcustomers', deleteAllCustomers);
 

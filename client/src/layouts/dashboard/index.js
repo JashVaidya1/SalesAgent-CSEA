@@ -56,7 +56,7 @@ function Dashboard() {
 
   useEffect(() => {
     axios
-      .get("https://giant-ducks-report.loca.lt/summaryData", {
+      .get("http://localhost:5001/api/v1/calls/getallcalls", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -66,15 +66,15 @@ function Dashboard() {
         const data = response.data;
         setSummaryData(data);
 
-        // Total Inventory Sold
-        const inventorySold = data.filter((item) => item.sold === 1).length;
+        // ntory Sold
+        const inventorySold = data.filter((item) => item.summary.sold === 1).length;
         setTotalInventorySold(inventorySold);
 
         // Total Users Contacted
         setTotalUsersContacted(data.length);
 
         // Average Discount Given
-        const totalDiscount = data.reduce((acc, item) => acc + (item.discount || 0), 0);
+        const totalDiscount = data.reduce((acc, item) => acc + (item.summary.discount || 0), 0);
         const avgDiscount = data.length > 0 ? totalDiscount / data.length : 0;
         setAverageDiscount(avgDiscount.toFixed(2));
 
@@ -86,11 +86,11 @@ function Dashboard() {
         const totalSold = data.reduce((acc, item) => {
           const itemDate = new Date(item.datetime);
           if (
-            item.sold === 1 &&
+            item.summary.sold === 1 &&
             itemDate.getMonth() === currentMonth &&
             itemDate.getFullYear() === currentYear
           ) {
-            return acc + (item.soldPrice || 0);
+            return acc + (item.summary.soldPrice || 0);
           }
           return acc;
         }, 0);
@@ -129,8 +129,8 @@ function Dashboard() {
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "Total Sold This Month ($)" }}
-                count={`$${totalSoldCurrentMonth}`}
+                title={{ text: "Total Sold This Month (₹)" }}
+                count={`₹${totalSoldCurrentMonth}`}
                 icon={{ color: "info", component: <FaShoppingCart size="20px" color="white" /> }}
               />
             </Grid>

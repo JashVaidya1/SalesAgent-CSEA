@@ -18,15 +18,12 @@ tools_info = {
     }
 }
 
-
-
-# def calc_disc(message_history,product_name):    
 #     print('Calculating discount...')
 
 #     # # Step 1: Fetch the full product database
 #     # url = 'https://kno2getherworkflow.ddns.net/webhook/fetchMemberShip'
 #     # headers = {'Content-Type': 'application/json'}
-#     # response = requests.post(url, headers=headers, json={})
+#     # response = requests.post(url, headers=headers, json={}) 
 
 #     # if response.status_code != 200:
 #     #     return "Failed to fetch product data."

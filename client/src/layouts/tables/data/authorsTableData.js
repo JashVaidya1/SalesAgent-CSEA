@@ -60,8 +60,9 @@ function useCustomerData() {
 
     const handleCall = async () => {
       try {
+        // eslint-disable-next-line no-undef
         const customer = customerdata || customersData.find(c => c._id === customerId);
-        console.log("customer call click on: ", customerdata);
+        console.log("customer call click on: ", customerdata); 
         
         if (!customer) {
           console.error("Customer not found");

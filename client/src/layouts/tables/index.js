@@ -36,6 +36,12 @@ function Tables() {
                       `${borderWidth[1]} solid ${grey[700]}`,
                   },
                 },
+                "& .MuiTableRow-root": {
+                  cursor: "pointer",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  },
+                },
               }}
             >
               <Table columns={columns} rows={rows} />

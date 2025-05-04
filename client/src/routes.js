@@ -43,8 +43,7 @@ const routes = [
     icon: <IoHome size="15px" color="inherit" />,
     component: Chats, 
     noCollapse: true,
-  },
-  { type: "title", title: "Account Pages", key: "account-pages" },
+  }
  
 ];
 

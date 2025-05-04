@@ -1,11 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-dotenv.config();
+dotenv.config({ path: './.env.production' });
 import connectToDb from "./config/db_config.js";
 import cookieParser from "cookie-parser";
 const app = express();
-import productRoutes from './routes/productRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
 import callRoutes from './routes/callRoutes.js';
 import laptopRoutes from './routes/laptopRoutes.js';
@@ -16,7 +15,7 @@ const corsOptions = {
         if (!origin) {
             return callback(null, true);
         }
-        return callback(null, origin); // Allow any origin dynamically
+        return callback(null, origin); 
     },
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type,Authorization",
@@ -34,7 +33,6 @@ app.get('/api/v1', (req, res) => {
 });
 
 
-app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/customers', customerRoutes);
 app.use('/api/v1/calls', callRoutes);
 app.use('/api/v1/laptops', laptopRoutes);

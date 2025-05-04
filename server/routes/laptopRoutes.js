@@ -4,7 +4,6 @@ import { createNewLaptop, getAllLaptops } from '../controllers/laptopController.
 const router = express.Router();
 
 router.post('/create-new-laptop', createNewLaptop);
-
 router.get('/getalllaptops', getAllLaptops);
 
 export default router;

@@ -28,18 +28,14 @@ function ReferralTracking() {
 			.then((response) => {
 				const customerData = response.data;
 
-				// Calculate score (sold items) and maxScore (total number of customers)
 				let soldItems = 0;
 
-				// Loop through customerData and calculate sold items
 				customerData.forEach((customer) => {
-					if (customer.summary.sold === 1) {
-						soldItems += 1;
-					}
+					soldItems += customer.summary.sentiment_score;
 				});
 
-				setScore(soldItems);  // Setting the score (sold items count)
-				setMaxScore(customerData.length);  // Setting the maxScore (total customers count)
+				setScore(soldItems);  
+				setMaxScore(customerData.length);  
 			})
 			.catch((error) => {
 				console.error('Error fetching data:', error);
@@ -48,7 +44,6 @@ function ReferralTracking() {
 
 	// Calculate the progress value
 	const progressValue = (score * 100 / maxScore);
-
 
 	return (
 		<Card
@@ -64,7 +59,7 @@ function ReferralTracking() {
 					sx={{ width: '100%' }}
 					mb='40px'>
 					<VuiTypography variant='lg' color='white' mr='auto' fontWeight='bold'>
-						Success call Ratio
+						Average Sentiment Score 
 					</VuiTypography>
 					<VuiBox
 						display='flex'
@@ -145,10 +140,10 @@ function ReferralTracking() {
 								}
 							})}>
 							<VuiTypography color='text' variant='button' fontWeight='regular' mb='5px'>
-								Success calls
+								Average Sentiment Score
 							</VuiTypography>
 							<VuiTypography color='white' variant='lg' fontWeight='bold'>
-								{score}
+								{score/maxScore}
 							</VuiTypography>
 						</VuiBox>
 					</Stack>
@@ -172,7 +167,7 @@ function ReferralTracking() {
 							}}>
 							<VuiBox display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
 								<VuiTypography color='text' variant='button' mb='4px'>
-									Success Rate
+									Average Sentiment Score
 								</VuiTypography>
 								<VuiTypography
 									color='white'
@@ -184,10 +179,10 @@ function ReferralTracking() {
 											fontSize: '32px'
 										}
 									})}>
-									{progressValue}%
+									{score/maxScore}
 								</VuiTypography>
 								<VuiTypography color='text' variant='button'>
-									Percentage 
+									Value 
 								</VuiTypography>
 							</VuiBox>
 						</VuiBox>
