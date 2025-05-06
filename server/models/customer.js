@@ -21,7 +21,7 @@ const customerSchema = new mongoose.Schema({
   contactno: {
     type: String,
     required: [true, 'Please provide contact number'],
-    unique: true,
+ 
   },
 
 }, {
