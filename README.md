@@ -224,3 +224,12 @@ python app.py
 ```
 
 The front-end will typically run on port 3000, the back-end on port 8000, and the Python model on port 5000, unless configured otherwise.
+
+> **Note**  
+> This project involves three separate deployments—Client (Frontend), Backend (Server), and Model.  
+> To simplify the deployment process, we’ve created three different repositories for them.  
+
+### 🔗 Deployment Repositories
+- **Client (Frontend Deployment):** [PitchNova Frontend](https://github.com/DhruvPansuriya/PitchNova)  
+- **Backend Deployment:** [SalesAgent-CSEA (dhruv3 branch)](https://github.com/JashVaidya1/SalesAgent-CSEA/tree/dhruv3)  
+- **Model Deployment:** [PitchNovaModel](https://github.com/DhruvPansuriya/PitchNovaModel)
