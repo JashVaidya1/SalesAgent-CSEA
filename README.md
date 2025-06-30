@@ -12,7 +12,7 @@ Experience PitchNova in action:
 
 ## 📋 Overview
 
-PitchNova is a full-stack intelligent sales system designed to seamlessly integrate into existing sales pipelines. The system leverages advanced natural language processing, voice synthesis, and real-time analytics to create personalized and effective cold calling experiences.
+PitchNova is a full-stack intelligent sales system designed to seamlessly integrate into existing sales pipelines. The system leverages advanced natural language processing, voice synthesis, and real-time analytics to create personalized and effective cold calling experiences. 
 
 ### What PitchNova Can Do:
 
@@ -136,7 +136,7 @@ This comprehensive solution provides critical business intelligence to optimize 
 - MongoDB instance
 - Twilio account
 - Eleven Labs API key
-- Groq API access
+- Groq API key
 
 ### 🔧 Installation
 
